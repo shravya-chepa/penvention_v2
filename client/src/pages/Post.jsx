@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -40,10 +40,19 @@ const Post = () => {
     }
   };
 
+  const handleEditClick = () => {
+    navigate(`/write?edit=2`, { state: { post } });
+  };
+
+  const getText = (htmlText) => {
+    const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+    return doc.body.textContent;
+  }
+
   return (
     <div className="single-post">
       <div className="content">
-        <img src={post.img} alt="post-img" />
+        <img src={`../upload/${post.img}`} alt="post-img" />
         <div className="user">
           {post.userImage && <img src={post.userImage} alt="user-img" />}
           <div className="info">
@@ -53,16 +62,14 @@ const Post = () => {
 
           {currentUser.username === post.username && (
             <div className="edit">
-              <Link to={`/write?edit=2`}>
-                <img src={Edit} alt="edit" />
-              </Link>
+              <img src={Edit} alt="edit" onClick={handleEditClick}/>
               <img onClick={handleDelete} src={Delete} alt="delete" />
             </div>
           )}
         </div>
         <h1>{post.title}</h1>
 
-        <p>{post.description}</p>
+        <p>{getText(post.description)}</p>
       </div>
       {/* <div className="menu">
         <Menu />
